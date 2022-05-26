@@ -6,6 +6,7 @@ import (
 	"barbot/internal/middleware"
 	"barbot/internal/repository"
 	"barbot/internal/service"
+	"time"
 
 	"github.com/gin-contrib/cors"
 
@@ -39,7 +40,13 @@ func mapRoutes(r *gin.Engine) {
 	sessionsCtrl := controller.NewSessionsController(sessionsSrv)
 
 	// Middlewares
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowCredentials: true,
+		AllowMethods:     []string{"POST", "GET", "DELETE", "PUT"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		MaxAge:           12 * time.Hour,
+	}))
 	mwAuth := middleware.NewAuthMiddleware()
 
 	// Endpoints
@@ -48,4 +55,5 @@ func mapRoutes(r *gin.Engine) {
 	r.POST(defines.EndpointCreateUser, usersCtrl.Create)
 	r.GET(defines.EndpointGetUserByUUID, mwAuth.Check, usersCtrl.GetByUUID)
 	r.POST(defines.EndpointCreateSession, sessionsCtrl.Create)
+	r.GET(defines.EndpointGetSession, mwAuth.Check, sessionsCtrl.Get)
 }

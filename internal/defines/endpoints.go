@@ -6,4 +6,5 @@ const (
 	EndpointCreateUser     = "/users"
 	EndpointGetUserByUUID  = "/user/:uuid"
 	EndpointCreateSession  = "/sessions"
+	EndpointGetSession     = "/session"
 )
