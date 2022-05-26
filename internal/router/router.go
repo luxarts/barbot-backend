@@ -44,7 +44,7 @@ func mapRoutes(r *gin.Engine) {
 		AllowAllOrigins:  true,
 		AllowCredentials: true,
 		AllowMethods:     []string{"POST", "GET", "DELETE", "PUT"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Access-Control-Allow-Header", "Access-Control-Request-Headers", "Authorization"},
 		MaxAge:           12 * time.Hour,
 	}))
 	mwAuth := middleware.NewAuthMiddleware()
