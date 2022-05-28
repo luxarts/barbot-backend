@@ -6,8 +6,6 @@ import (
 	"barbot/internal/repository"
 	"barbot/internal/utils/jwt"
 	"os"
-
-	_ "github.com/joho/godotenv/autoload"
 )
 
 type SessionsService interface {

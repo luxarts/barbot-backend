@@ -1,12 +1,13 @@
 package domain
 
 type MixedDrink struct {
-	ID     int64               `json:"id"`
-	Name   string              `json:"name"`
-	Drinks []DrinksPercentages `json:"drinks"`
+	ID     int64                   `json:"id"`
+	Name   string                  `json:"name"`
+	Img    string                  `json:"img"`
+	Drinks []DrinksWithPercentages `json:"drinks"`
 }
 
-type DrinksPercentages struct {
+type DrinksWithPercentages struct {
 	ID         int64  `json:"id"`
 	Name       string `json:"name"`
 	Percentage int    `json:"percentage"`
@@ -19,16 +20,15 @@ func (md MixedDrink) ToDTO() MixedDrinkDTO {
 
 	dto.ID = md.ID
 	dto.Name = md.Name
-	dto.DrinksPercentages = make(DrinksPercentagesMap, len(md.Drinks))
-	for _, d := range md.Drinks {
-		dto.DrinksPercentages[d.ID] = d.Percentage
-	}
+	dto.Img = md.Img
+	dto.Drinks = md.Drinks
 
 	return dto
 }
 
 type MixedDrinkDTO struct {
-	ID                int64                `json:"id"`
-	Name              string               `json:"name"`
-	DrinksPercentages DrinksPercentagesMap `json:"drinks_percentages"`
+	ID     int64                   `json:"id"`
+	Name   string                  `json:"name"`
+	Img    string                  `json:"img"`
+	Drinks []DrinksWithPercentages `json:"drinks"`
 }

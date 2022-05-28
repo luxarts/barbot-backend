@@ -6,6 +6,9 @@ import (
 	"barbot/internal/middleware"
 	"barbot/internal/repository"
 	"barbot/internal/service"
+	"log"
+	"os"
+	"path"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -22,9 +25,23 @@ func New() *gin.Engine {
 }
 
 func mapRoutes(r *gin.Engine) {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	mdRepoFile := os.Getenv(defines.EnvDBFilePathMixedDrinks)
+	if mdRepoFile == "" {
+		log.Fatalf("%s empty", defines.EnvDBFilePathMixedDrinks)
+	}
+	drinksRepoFile := os.Getenv(defines.EnvDBFilePathDrinks)
+	if drinksRepoFile == "" {
+		log.Fatalf("%s empty", defines.EnvDBFilePathDrinks)
+	}
+
 	// Repositories
-	mdRepo := repository.NewMixedDrinksRepository()
-	drinksRepo := repository.NewDrinksRepository()
+	mdRepo := repository.NewMixedDrinksRepository(path.Join(wd, mdRepoFile))
+	drinksRepo := repository.NewDrinksRepository(path.Join(wd, drinksRepoFile))
 	usersRepo := repository.NewUsersRepository()
 
 	// Services

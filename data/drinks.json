@@ -1,0 +1,34 @@
+[
+    {
+        "id": 0,
+        "name": "Fernet"
+    },
+    {
+        "id": 1,
+        "name": "Coca Cola"
+    },
+    {
+        "id": 2,
+        "name": "Agua con gas"
+    },
+    {
+        "id": 3,
+        "name": "Jugo de limón"
+    },
+    {
+        "id": 4,
+        "name": "Ron"
+    },
+    {
+        "id": 5,
+        "name": "Ginebra"
+    },
+    {
+        "id": 6,
+        "name": "Agua tónica"
+    },
+    {
+        "id": 7,
+        "name": "Vermut"
+    }
+]

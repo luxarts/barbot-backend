@@ -1,43 +1,55 @@
 package repository
 
-import "barbot/internal/domain"
+import (
+	"barbot/internal/domain"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+)
 
 type MixedDrinksRepository interface {
 	GetAll() []domain.MixedDrink
 }
 
 type mixedDrinksRepository struct {
+	filepath string
+	db       []domain.MixedDrink
 }
 
-func NewMixedDrinksRepository() MixedDrinksRepository {
-	return &mixedDrinksRepository{}
+func NewMixedDrinksRepository(filepath string) MixedDrinksRepository {
+	r := mixedDrinksRepository{filepath: filepath}
+
+	if err := r.ReadFile(); err != nil {
+		log.Fatalln(err)
+	}
+
+	return &r
+}
+
+func (r *mixedDrinksRepository) ReadFile() error {
+	if _, err := os.Stat(r.filepath); errors.Is(err, os.ErrNotExist) {
+		return errors.New(fmt.Sprintf("file %s doesn't exists", r.filepath))
+	}
+
+	// Open file and create the reader
+	file, err := os.Open(r.filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(data, &r.db)
+	return err
 }
 
 func (r *mixedDrinksRepository) GetAll() []domain.MixedDrink {
-	return []domain.MixedDrink{
-		{
-			ID: 0, Name: "Fernet Cola", Drinks: []domain.DrinksPercentages{
-				{ID: 0, Name: "Fernet", Percentage: 30},
-				{ID: 1, Name: "Coca Cola", Percentage: 70},
-			},
-		},
-		{
-			ID: 1, Name: "Mojito", Drinks: []domain.DrinksPercentages{
-				{ID: 2, Name: "Agua con gas", Percentage: 57},
-				{ID: 3, Name: "Jugo de Limón", Percentage: 14},
-				{ID: 4, Name: "Ron", Percentage: 29}},
-		},
-		{
-			ID: 2, Name: "Gin Tonic", Drinks: []domain.DrinksPercentages{
-				{ID: 5, Name: "Ginebra", Percentage: 20},
-				{ID: 6, Name: "Agua tónica", Percentage: 80},
-			},
-		},
-		{
-			ID: 3, Name: "Martini", Drinks: []domain.DrinksPercentages{
-				{ID: 5, Name: "Ginebra", Percentage: 83},
-				{ID: 7, Name: "Vermut", Percentage: 17},
-			},
-		},
-	}
+	return r.db
 }
